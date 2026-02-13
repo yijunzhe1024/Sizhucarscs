@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>挪车通知</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'SimHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+            flex-grow: 1;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        .info-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .info-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #212529;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .info-value:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .info-value .copy-hint {
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .info-value:hover .copy-hint {
+            opacity: 1;
+        }
+        
+        .message-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            border-left: 5px solid #f39c12;
+        }
+        
+        .message-box h3 {
+            color: #d35400;
+            margin-bottom: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .message-box h3::before {
+            content: "💡";
+            margin-right: 10px;
+        }
+        
+        .message-box p {
+            color: #2c3e50;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+        
+        .footer span {
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .copied-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #27ae60;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .copied-toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="copied-toast" id="toast">✓ 已复制到剪贴板</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🚗 挪车通知</h1>
+            <p>请保持冷静，我们将尽快联系车主</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-card">
+                <div class="info-label">📞 车主电话</div>
+                <div class="info-value" onclick="copyToClipboard('111111111')" title="点击复制">
+                    111111111
+                    <span class="copy-hint">📋 点击复制</span>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">🚙 车牌号码</div>
+                <div class="info-value" onclick="copyToClipboard('111111111')" title="点击复制">
+                    111111111
+                    <span class="copy-hint">📋 点击复制</span>
+                </div>
+            </div>
+            
+            <div class="message-box">
+                <h3>温馨提示</h3>
+                <p>1111111</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            © 2026 <span>Sizhu Cars Yijunzhe</span> - 让挪车更简单
+        </div>
+    </div>
+    
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                showToast();
+            }).catch(function(err) {
+                console.error('复制失败:', err);
+            });
+        }
+        
+        function showToast() {
+            var toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
